@@ -36,7 +36,6 @@ public class AccountDetails {
 	
 	//Account number of the account holder
 	@NotNull(message = "accountNumber must not be null")
-	//@Pattern(regexp="\\d+", message="Invalid account number")
 	private Integer accountNumber;
 
 }

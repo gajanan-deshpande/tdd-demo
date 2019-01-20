@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.gd.tdd.tddrestDemo.exception.RecordAlreadyExistsException;
+import com.gd.tdd.tddrestDemo.exception.RecordDoesNotExistException;
 import com.gd.tdd.tddrestDemo.model.AccountDetails;
 
 /**
@@ -20,7 +22,7 @@ public class ManageAccountsService {
 	//This will act as Java cache to store the Account details as no DB is needed for this assignment
 	private Map<String, AccountDetails> map = new ConcurrentHashMap<>();
 
-	public String addAccount(AccountDetails account) throws Exception {
+	public String addAccount(AccountDetails account) throws RecordAlreadyExistsException {
 		account.setId(UUID.randomUUID().toString());
 		//The below code will check if the firstName and secondName already exists
 		if(!(map.values().stream().anyMatch(value -> account.getFirstName().equals(value.getFirstName()) && 
@@ -29,7 +31,7 @@ public class ManageAccountsService {
 		}
 		else
 		{
-			throw new Exception("ALREADY_EXISTS");
+			throw new RecordAlreadyExistsException("ALREADY_EXISTS");
 		}
 		return "The account has been successfully added";
 	}
@@ -38,13 +40,13 @@ public class ManageAccountsService {
 		return map.values().stream().collect(Collectors.toList());
 	}
 
-	public String deleteAccount(String id) throws Exception {
+	public String deleteAccount(String id) throws RecordDoesNotExistException {
 		//The below code will check if the id exists in the map to delete 
 		if(map.containsKey(id)) {
 			map.remove(id);
 		}
 		else {
-			throw new Exception("NOT_FOUND");
+			throw new RecordDoesNotExistException("NOT_FOUND");
 		}
 		return "The account has been successfully deleted";
 	}

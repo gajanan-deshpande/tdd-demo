@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gd.tdd.tddrestDemo.TddRestDemoApplication;
+import com.gd.tdd.tddrestDemo.exception.RecordAlreadyExistsException;
+import com.gd.tdd.tddrestDemo.exception.RecordDoesNotExistException;
 import com.gd.tdd.tddrestDemo.model.AccountDetails;
 import com.gd.tdd.tddrestDemo.service.ManageAccountsService;
 
@@ -81,18 +83,18 @@ public class ManageAccountsControllerTest {
 	       .andExpect(content().string("The account has been successfully added"));
 	}
 	
-	@Test(expected=Exception.class)
+	@Test
 	public void willSendAlreadyExistsCreateAccount() throws Exception {
 		
 		when(accountsService.addAccount(accDetailsList.get(0)))
-			.thenThrow(new Exception("ALREADY_EXISTS"));
+			.thenThrow(new RecordAlreadyExistsException("ALREADY_EXISTS"));
 		
 		String json = mapper.writeValueAsString(accDetailsList.get(0));
 	    mvc.perform(post("/account/create")
 	       .contentType(MediaType.APPLICATION_JSON)
 	       .content(json)
 	       .accept(MediaType.APPLICATION_JSON))
-	       .andExpect(status().is5xxServerError());
+	       .andExpect(status().isBadRequest());
 	}
 	
 	@Test
@@ -147,18 +149,16 @@ public class ManageAccountsControllerTest {
 			      .andExpect(content().string("The account has been successfully deleted"));
 	}
 	
-	@Test(expected=Exception.class)
+	@Test
 	public void willSendNotFoundDeleteAccountForInvalidId() throws Exception {
 		
 		when(accountsService.deleteAccount("123456"))
-			.thenThrow(new Exception("NOT_FOUND"));
+			.thenThrow(new RecordDoesNotExistException("NOT_FOUND"));
 		
 		mvc.perform(delete("/account/delete/{id}", "123456")
 			      .contentType(MediaType.APPLICATION_JSON)
 				  .accept(MediaType.APPLICATION_JSON))
-			      .andExpect(status().isExpectationFailed())
-			      .andExpect(content()
-			      .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+			      .andExpect(status().isBadRequest());
 	}
 
 }
