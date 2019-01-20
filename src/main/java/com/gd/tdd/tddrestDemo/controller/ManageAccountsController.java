@@ -31,16 +31,16 @@ public class ManageAccountsController {
 	
 	@PostMapping(path = "create")
     public ResponseEntity<String> addAccount(@RequestBody @Valid AccountDetails account) throws Exception{
-        return null;
+        return new ResponseEntity<>(accountService.addAccount(account),HttpStatus.CREATED);
     }
 	
 	@GetMapping(path = "get")
     public ResponseEntity<List<AccountDetails>> getAllAccounts(){
-        return null;
+        return new ResponseEntity<>(accountService.getAccounts(),HttpStatus.OK);
     }
 	
 	 @DeleteMapping("delete/{id}")
 	 public ResponseEntity<String> deleteAccount(@PathVariable(name = "id") String id) throws Exception{
-	     return null;
+	     return new ResponseEntity<>(accountService.deleteAccount(id),HttpStatus.OK);
 	 }
 }

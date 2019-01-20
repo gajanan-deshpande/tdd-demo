@@ -23,12 +23,20 @@ public class AccountDetails {
 	private String id;
 	
 	//First Name of the account holder
+	@NotNull(message = "firstName must not be null")
+	@NotEmpty(message = "firstName must not be blank")
+	@Pattern(regexp="[a-zA-Z]+", message="Invalid first name")	
 	private String firstName;
 	
 	//Second Name of the account holder
+	@NotNull(message = "secondName must not be null")
+	@NotEmpty(message = "secondName must not be blank")
+	@Pattern(regexp="[a-zA-Z]+", message="Invalid second name")	
 	private String secondName;
 	
 	//Account number of the account holder
+	@NotNull(message = "accountNumber must not be null")
+	//@Pattern(regexp="\\d+", message="Invalid account number")
 	private Integer accountNumber;
 
 }
